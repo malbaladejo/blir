@@ -14,7 +14,15 @@ export class RoutingService {
   }
 
   settingsRoute(): string {
-    return routeSegments.settings.path;
+    return '/' + routeSegments.settings.path;
+  }
+
+  settingsGeneralTabRoute(): string {
+    return this.settingsRoute() + '/' + routeSegments.settings.tabs.general.path;
+  }
+
+  settingsExceptionsTabRoute(): string {
+    return this.settingsRoute() + '/' + routeSegments.settings.tabs.exceptions.path;
   }
 
   settingsExceptionsRoute(): string {

@@ -22,6 +22,9 @@ import { HomeMenuService } from './home/homemenu.service';
 import { WeekDayLabelPipe } from './week-day-label.pipe';
 import { SettingsExceptionEditComponent } from './settings/settings-exception-edit/settings-exception-edit.component';
 import { SettingsExceptionComponent } from './settings/settings-exception/settings-exception.component';
+import { SettingsGeneralTabComponent } from './settings/settings-general-tab/settings-general-tab.component';
+import { SettingsExceptionTabComponent } from './settings/settings-exception-tab/settings-exception-tab.component';
+import { IntervalDataService } from './services/intervalData.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,9 @@ import { SettingsExceptionComponent } from './settings/settings-exception/settin
     HomesidebarComponent,
     WeekDayLabelPipe,
     SettingsExceptionEditComponent,
-    SettingsExceptionComponent
+    SettingsExceptionComponent,
+    SettingsGeneralTabComponent,
+    SettingsExceptionTabComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +52,11 @@ import { SettingsExceptionComponent } from './settings/settings-exception/settin
     ChartsModule,
     FormsModule
   ],
-  providers: [IntervalService, SettingsService, HomeMenuService],
+  providers: [
+    IntervalService,
+    { provide: IntervalDataService, useClass: IntervalDataService },
+    SettingsService,
+    HomeMenuService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

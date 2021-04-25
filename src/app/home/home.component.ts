@@ -7,7 +7,7 @@ import { DayTimePeriod } from '../services/dayTimePeriod';
 import { TimePeriod } from '../services/timePeriod';
 import { IntervalService } from '../services/interval.service';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 export
   class HomeVm {
@@ -42,9 +42,9 @@ export class HomeComponent implements OnInit {
       .pipe(map(value => new HomeVm(value)));
 
     const t = intervalService.getHomeTimePeriods();
-    this.dayTimePeriod = t[0] as DayTimePeriod;
-    this.weekTimePeriod = t[1];
-    this.monthsTimePeriod = t[2];
+    this.dayTimePeriod = t.currentDay;
+    this.weekTimePeriod = t.currentWeek;
+    this.monthsTimePeriod = t.lastTwoMonths;
   }
 
   ngOnInit(): void {

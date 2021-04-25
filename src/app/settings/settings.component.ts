@@ -1,4 +1,3 @@
-import { WeekDay } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RoutingService } from '../RoutingModule/routing.service';
 import { DurationValue } from './durationValue';
@@ -6,7 +5,6 @@ import { Constraint } from './model/constraint';
 import { contraintType } from './model/contraintType';
 import { DayConstraint } from './model/dayConstraint';
 import { PeriodConstraint } from './model/periodConstraint';
-import { UserSettings } from './model/userSettings';
 import { WeekDayConstraint } from './model/weekDayConstraint';
 import { SettingsService } from './settings.service';
 import { WeekDayConstraintViewModel } from './weekDayConstraintViewModel';
@@ -17,7 +15,6 @@ import { WeekDayConstraintViewModel } from './weekDayConstraintViewModel';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
-  userSettings: UserSettings;
   weekDayConstraints: WeekDayConstraintViewModel[];
   constraints = new Array<Constraint>();
   contraintType = contraintType;
@@ -34,8 +31,8 @@ export class SettingsComponent implements OnInit {
   }
 
   constructor(public routingService: RoutingService, private settingsService: SettingsService) {
-    this.userSettings = this.settingsService.getUserSettings();
-    this.weekDayConstraints = this.userSettings.constraints
+    this.weekDayConstraints = this.settingsService.
+      constraints
       .filter(c => c.type === contraintType.weekDay)
       .map(c => new WeekDayConstraintViewModel(c as WeekDayConstraint));
   }
@@ -56,7 +53,7 @@ export class SettingsComponent implements OnInit {
   }
 
   private initializeConstraints(): void {
-    this.constraints = this.settingsService.getConstraints().slice(0, 10);
+    this.constraints = this.settingsService.constraints.slice(0, 10);
   }
 
 }

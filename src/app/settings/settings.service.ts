@@ -1,57 +1,92 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Constraint } from './model/constraint';
-import { DayConstraint } from './model/dayConstraint';
-import { PeriodConstraint } from './model/periodConstraint';
-import { UserSettings } from './model/userSettings';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
 
-  private userSettingsKey = 'user-seetings';
-  private userSettings: UserSettings;
+  private userSettingsShowEllaspsedTimeKey = 'user-seetings-showEllaspsedTime';
+  private userSettingsConstraintsTimeKey = 'user-seetings-constraints';
 
-  private showEllaspsedTime: BehaviorSubject<boolean>;
-  public showEllaspsedTime$: Observable<boolean>;
+  private showEllaspsedTime = new BehaviorSubject<boolean>(true);
+  private constraintList = new Array<Constraint>();
 
   constructor() {
-    this.userSettings = this.ensureUserSettings();
-    this.showEllaspsedTime = new BehaviorSubject<boolean>(this.userSettings.showEllaspsedTime);
     this.showEllaspsedTime$ = this.showEllaspsedTime.asObservable();
+
+    this.ensureUserSettings();
   }
 
-  getUserSettings(): UserSettings {
-    return this.userSettings;
-  }
-
-  setUserSettings(userSettings: UserSettings): void {
-    window.localStorage.setItem(this.userSettingsKey, JSON.stringify(userSettings));
-  }
+  /*showEllaspsedTime*/
+  showEllaspsedTime$: Observable<boolean>;
 
   setShowEllaspsedTime(value: boolean): void {
-    this.showEllaspsedTime.next(value);
-    this.userSettings.showEllaspsedTime = value;
-    this.setUserSettings(this.userSettings);
-  }
-
-  private ensureUserSettings(): UserSettings {
-    const json = window.localStorage.getItem(this.userSettingsKey);
-    if (json != null) {
-      return JSON.parse(json);
+    if (this.showEllaspsedTime.value === value) {
+      return;
     }
 
-    return new UserSettings();
+    this.showEllaspsedTime.next(value);
+    this.saveShowEllaspsedTime(value);
   }
 
+  /*getConstraint*/
   getConstraint(id: string): Constraint {
-    return new DayConstraint('DayConstraint-1', 0);
+    const constraint = this.constraints.find(c => c.id === id) as Constraint;
+
+    if (constraint == null) {
+      throw (new Error('Unknown constraint ' + id));
+    }
+
+    return constraint;
   }
 
-  getConstraints(): Constraint[] {
-    return [new DayConstraint('DayConstraint-1', 0, new Date(2020, 4, 26)),
-    new PeriodConstraint('PeriodConstraint-1', 0, new Date(2020, 4, 1), new Date(2020, 4, 10))
-    ];
+  /* constraints*/
+  get constraints(): Constraint[] {
+    return this.constraintList;
+  }
+
+  set constraints(constraints: Constraint[]) {
+    this.constraintList = constraints;
+    this.saveConstraints(constraints);
+  }
+
+  /* ensure data*/
+  private ensureUserSettings(): void {
+    this.showEllaspsedTime.next(this.loadShowEllaspsedTimes());
+    this.constraintList = this.loadConstraints();
+  }
+
+  protected loadShowEllaspsedTimes(): boolean {
+    const json = window.localStorage.getItem(this.userSettingsShowEllaspsedTimeKey);
+    if (json === null) {
+      return true;
+    }
+    return json === 'true';
+  }
+
+  protected loadConstraints(): Constraint[] {
+    const json = window.localStorage.getItem(this.userSettingsConstraintsTimeKey);
+    if (json === null) {
+      return new Array<Constraint>();
+    }
+
+    const constraints = JSON.parse(json) as Constraint[];
+    if (constraints !== null) {
+      return constraints;
+    }
+
+    return new Array<Constraint>();
+  }
+
+  /*save data*/
+  protected saveShowEllaspsedTime(value: boolean): void {
+    window.localStorage.setItem(this.userSettingsShowEllaspsedTimeKey, value.toString());
+  }
+
+  protected saveConstraints(constraints: Constraint[]): void {
+    window.localStorage.setItem(this.userSettingsConstraintsTimeKey, JSON.stringify(constraints));
   }
 }

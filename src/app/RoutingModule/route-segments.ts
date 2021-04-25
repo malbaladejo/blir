@@ -6,6 +6,14 @@ export const routeSegments = {
     },
     settings: {
         path: 'settings',
+        tabs: {
+            general: {
+                path: 'general-tab',
+            },
+            exceptions: {
+                path: 'exceptions-tab',
+            }
+        },
         exceptions: {
             path: 'settings/exceptions',
             edit: {

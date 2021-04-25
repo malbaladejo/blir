@@ -1,14 +1,15 @@
-import { Constraint } from "./constraint";
-import { contraintType } from "./contraintType";
+import { contraintType } from './contraintType';
+import { DayConstraint } from './dayConstraint';
 
-export class PeriodConstraint extends Constraint {
+export class PeriodConstraint extends DayConstraint {
     type = contraintType.period;
 
     constructor(
-        public id: string,
-        public numberOfMinutes: number,
-        public startDate: Date | null = null,
-        public endDate: Date | null = null) {
-        super(id, numberOfMinutes ?? 0);
+        id: string,
+        numberOfMinutes: number | null = null,
+        startDate: Date | null = null,
+        endDate: Date | null = null) {
+        super(id, numberOfMinutes ?? 0, startDate);
+        this.endDate = endDate;
     }
 }

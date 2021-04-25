@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UserSettings } from 'src/app/settings/model/userSettings';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { SettingsService } from 'src/app/settings/settings.service';
 import { HomeMenuItem, HomeMenuService } from '../homemenu.service';
 
@@ -8,21 +8,27 @@ import { HomeMenuItem, HomeMenuService } from '../homemenu.service';
   templateUrl: './homeheader.component.html',
   styleUrls: ['./homeheader.component.scss']
 })
-export class HomeheaderComponent {
+export class HomeheaderComponent implements OnDestroy {
   showEllaspsedTimeLabel = '';
   menuItems: HomeMenuItem[];
-  private userSettings: UserSettings;
+  private showEllaspsedTimeValue = true;
+  private showEllaspsedTimeSubscription: Subscription;
 
   constructor(private settingsService: SettingsService, homeMenuService: HomeMenuService) {
-    this.userSettings = this.settingsService.getUserSettings();
+    this.showEllaspsedTimeSubscription = this.settingsService.showEllaspsedTime$
+      .subscribe(v => this.showEllaspsedTimeValue = v);
     this.menuItems = homeMenuService.getHomeMenuItems();
   }
 
   @Output()
   toggleDrawerEvent = new EventEmitter<boolean>();
 
+  ngOnDestroy(): void {
+    this.showEllaspsedTimeSubscription.unsubscribe();
+  }
+
   get showEllaspsedTime(): boolean {
-    return this.userSettings.showEllaspsedTime;
+    return this.showEllaspsedTimeValue;
   }
 
   set showEllaspsedTime(value: boolean) {

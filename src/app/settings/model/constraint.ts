@@ -1,6 +1,15 @@
 export abstract class Constraint {
   abstract type: string;
-  constructor(public id: string, public numberOfMinutes: number) {
+  numberOfMinutes: number
+  constructor(public id: string, numberOfMinutes: number | null = null) {
+    this.numberOfMinutes = numberOfMinutes ?? 0;
+  }
 
+}
+
+export class DefaultConstraint extends Constraint {
+  type = 'default';
+  constructor() {
+    super('default', 0);
   }
 }

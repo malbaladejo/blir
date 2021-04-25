@@ -1,1 +1,88 @@
-<p>settings-exception-edit works!</p>
+<div class="toolbar" role="banner">
+    <a mat-button [routerLink]="routingService.settingsExceptionsTabRoute()" class="back">
+        <mat-icon>arrow_back</mat-icon>
+    </a>
+    Edition
+</div>
+<div class="content" *ngIf="(constraint$ | async) as constraint">
+
+    <mat-button-toggle-group name="type" aria-label="constraint type" [(ngModel)]="constraint.type">
+        <mat-button-toggle [value]="contraintType.day">1 jour</mat-button-toggle>
+        <mat-button-toggle [value]="contraintType.period">Plusieurs jours</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <!-- Day -->
+    <div *ngIf="constraint.type===contraintType.day">
+
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Date</mat-label>
+                <input matInput [matDatepicker]="picker" [(ngModel)]="asDayConstraint(constraint).startDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="fill" class="hours">
+                <mat-label class="weekDayLabel">Durée</mat-label>
+                <mat-select [(value)]="constraintVM.hours">
+                    <mat-option *ngFor="let hour of hours" [value]="hour.value">
+                        {{hour.label}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            :
+            <mat-form-field appearance="fill" class="hours">
+                <mat-select [(value)]="constraintVM.minutes">
+                    <mat-option *ngFor="let minute of minutes" [value]="minute.value">
+                        {{minute.label}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <!-- Period -->
+    <div *ngIf="constraint.type===contraintType.period">
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Du</mat-label>
+                <input matInput [matDatepicker]="startpicker" [(ngModel)]="asDayConstraint(constraint).startDate">
+                <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+                <mat-datepicker #startpicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Au</mat-label>
+                <input matInput [matDatepicker]="endpicker" [(ngModel)]="asDayConstraint(constraint).endDate">
+                <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+                <mat-datepicker #endpicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="fill" class="hours">
+                <mat-label class="weekDayLabel">Durée</mat-label>
+                <mat-select [(value)]="constraintVM.hours">
+                    <mat-option *ngFor="let hour of hours" [value]="hour.value">
+                        {{hour.label}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            :
+            <mat-form-field appearance="fill" class="hours">
+                <mat-select [(value)]="constraintVM.minutes">
+                    <mat-option *ngFor="let minute of minutes" [value]="minute.value">
+                        {{minute.label}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <button mat-raised-button color="primary">Enregistrer</button>
+    <button mat-raised-button>Annuler</button>
+</div>
