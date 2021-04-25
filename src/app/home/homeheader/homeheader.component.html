@@ -1,0 +1,17 @@
+<div class="toolbar" role="banner">
+    <button (click)="toggleDrawer()" mat-button>
+        <mat-icon class="burger-menu">menu</mat-icon>
+    </button>
+
+    <div class="menu">
+        <a *ngFor="let item of menuItems" [routerLink]="item.route">
+            <span>{{item.label}}</span>
+        </a>
+    </div>
+
+    <div class="right-part">
+        <mat-slide-toggle [(ngModel)]="showEllaspsedTime">
+            {{showEllaspsedTimeLabel}}
+        </mat-slide-toggle>
+    </div>
+</div>

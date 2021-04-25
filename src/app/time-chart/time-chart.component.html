@@ -1,0 +1,6 @@
+<canvas baseChart chartType="doughnut" [data]="data" [labels]="[]" [colors]="colors" [options]="options">
+</canvas>
+
+<div class="elapsedTime" [ngClass]="{' overdue':overdue, 'remainingTime':!showEllaspsedTime}">
+    {{operator}}{{displayTime | minutesToHours}}
+</div>

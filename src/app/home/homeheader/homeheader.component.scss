@@ -1,0 +1,19 @@
+
+.burger-menu{
+    display: none;
+}
+
+.menu{
+    display: inline-block;
+}
+
+
+@media screen and (max-width: 500px)  {
+    .burger-menu{
+        display: inline-block;
+    }
+    
+    .menu{
+        display: none;
+    }
+  }
